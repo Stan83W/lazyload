@@ -33,6 +33,29 @@
       img[data-srcset][src=""] {
         content: url("data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==");
       }
+
+      #list {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-content: flex-start;
+        margin: 0 -10px;
+        padding: 0;
+        list-style-type: none;
+      }
+
+      #list li {
+        flex: 0 0 auto;
+        width: calc((100% - 60px)/3);
+        margin: 20px 10px 0;
+        padding: 0;
+      }
+
+      #list img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
     </style>
   </head>
   <body>
@@ -73,7 +96,13 @@ img[data-srcset][src=""] {
 }
       </pre>
 
-      <p>Its well advisable to give the images/picture/iframes an intrinsic size to stop huge repaints - either by giving a pixel size or using the padding trick:</p>
+      <p>Its well advisable to give the images/picture/iframes an intrinsic size to stop huge repaints: Either by giving a pixel size and using a transparent gif:</p>
+
+      <pre>
+&lt;img width="500" height="281" data-src="/images/greenflash_800.jpg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="&gt;
+      </pre>
+
+      Or using the padding trick:
 
       <pre>
 .img-container {
@@ -104,6 +133,14 @@ img[data-srcset][src=""] {
 
 <pre>
   &lt;img src="" data-src="/images/greenflash_800.jpg"&gt;
+</pre>
+
+      <h2>Image on different domain</h2>
+
+      <img data-src="http://slider.dev.area17.com/images/960/02.jpg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+
+<pre>
+  &lt;img data-src="http://slider.dev.area17.com/images/960/02.jpg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="&gt;
 </pre>
 
       <h2>Standard image with LQIP</h2>
@@ -186,7 +223,24 @@ img[data-srcset][src=""] {
   &lt;iframe data-src="https://www.youtube.com/embed/Wji-BZ0oCwg?list=PL148kCvXk8pDWYE9q9cNdux5JFmu80kN8" width="560" height="315" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
 </pre>
 
+    <h2>Dynamically added content</h2>
+
+    <p><button id="add">Add</button></p>
+
+    <ul id="list"></ul>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.2/picturefill.min.js"></script>
     <script src="/lazyload.js"></script>
+    <script>
+      document.getElementById('add').addEventListener('click', function(event){
+        event.preventDefault();
+        this.parentNode.parentNode.removeChild(this.parentNode);
+        var li = '<li><img data-src="/images/greenflash_800.jpg"></li>';
+        var html = li + li + li + li + li + li + li + li + li + li + li + li;
+        var list = document.getElementById('list');
+        list.innerHTML = html;
+        lazyload(list);
+      }, false);
+    </script>
   </body>
 </html>
