@@ -24,8 +24,9 @@
    * @returns {Boolean} true/false.
    */
   function elInViewport(el) {
+    el = (el.tagName === 'SOURCE') ? el.parentNode : el;
     var rect = el.getBoundingClientRect();
-    return (rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight));
+    return ((rect.top >= 0 || rect.bottom >= 0) && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight));
   }
 
   /**
