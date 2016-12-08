@@ -13,7 +13,7 @@
 
   // set up
   var maxFrameCount = 10; // 60fps / 10 = 6 times a second
-  var frameCount = maxFrameCount;
+  var frameCount;
   var els = [];
   var elsLength;
 
@@ -43,19 +43,24 @@
    * @private
    */
   function setSrcs() {
+    // debounce checking
     if (frameCount === maxFrameCount) {
-      var elsLength = els.length;
+      // update cache of this for the loop
+      elsLength = els.length;
       var i;
       for (i = 0; i < elsLength; i++) {
-        if (els[i] && els[i].index === undefined && elInViewport(els[i])) {
+        // check if this array item exists, hasn't been loaded already and is in the viewport
+        if (els[i] && els[i].lazyloaded === undefined && elInViewport(els[i])) {
+          // cache this array item
           var thisEl = els[i];
+          // set this array item to be undefined to be cleaned up later
           els[i] = undefined;
-
-          thisEl.index = i;
+          // give this element a property to stop us running twice on one thing
+          thisEl.lazyloaded = true;
+          // add an event listener to remove data- attributes on load
           thisEl.addEventListener('load', loaded, false);
-
+          // if source set, update and try picturefill
           var srcset = thisEl.getAttribute('data-srcset');
-
           if (srcset) {
             thisEl.srcset = srcset;
             if (picturefill) {
@@ -68,18 +73,23 @@
           }
         }
       }
-
+      // clean up array
       for (i = 0; i < elsLength; i++) {
         if (els[i] === undefined) {
           els.splice(i, 1);
         }
       }
-
+      // reset var to decide if to continue running
+      elsLength = els.length;
+      // will shortly be set to 0 to start counting
       frameCount = -1;
     }
 
-    frameCount++;
-    window.requestAnimationFrame(setSrcs);
+    // run again? kill if not
+    if (elsLength > 0) {
+      frameCount++;
+      window.requestAnimationFrame(setSrcs);
+    }
   }
 
   /**
@@ -110,11 +120,15 @@
     var newEls = context.querySelectorAll('img[data-src], img[data-srcset], source[data-srcset], iframe[data-src]');
     newEls = Array.prototype.slice.call(newEls);
     els = arrayUnique(els.concat(newEls));
+    elsLength = els.length;
+    frameCount = maxFrameCount;
     setSrcs();
   }
 
+  // make public
   window.lazyload = lazyload;
 
+  // go go go!
   lazyload();
 
 })(window, document);
