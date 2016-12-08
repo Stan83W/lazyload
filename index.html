@@ -12,7 +12,7 @@
         display: block;
         border: 0 none;
         opacity: 1;
-        transition: opacity 2.25s;
+        transition: opacity .25s;
         width: 500px;
         height: 281px;
         background: #f2f2f2;
@@ -74,11 +74,9 @@
         <h1>Lazy load</h1>
       </header>
 
-      <p>Simple, tiny, no dependency, lazy loader.</p>
+      <p>Simple, tiny, no dependency, lazy loader. Source code available on <strong><a href="https://github.com/area17/lazyload">GitHub</a></strong>.</p>
 
-      <p>Doesn't preload, unload, mess with media queries, emit events, offer APIs etc.</p>
-
-      <p>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
+      <p>Doesn't preload, unload, mess with media queries, emit events, offer APIs etc. <br>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
 
       <p>When an element is in the view port it swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. It also adds a load listener and removes the <code>data-</code> attribute on load to allow you to hook styles up to the two different states.</p>
 
@@ -88,7 +86,7 @@
 
       <h2>Dynamic content</h2>
 
-      <p>By default it checks the DOM for appropriate elements and begins checking those. If you load more content dynamically, you can call:</p>
+      <p>lazyload exposes <code>lazyload</code> globally. By default it checks the DOM for appropriate elements and begins checking those. If you load more content dynamically, you can call:</p>
 
       <pre>lazyload();</pre>
 
@@ -96,7 +94,7 @@
 
       <pre>lazyload(node);</pre>
 
-      <p>It assumes the <code>document</code> if no node is specified. It won't check the same element more than once per iteration.</p>
+      <p>It assumes the <code>document</code> if no <code>node</code> is specified. It won't check the same element more than once per iteration so no need to worry about duplicates.</p>
 
       <p>This restarts the loop checking on things.</p>
 
@@ -111,7 +109,7 @@ iframe {
   display: block;
   border: 0 none;
   opacity: 1;
-  transition: opacity 2.25s;
+  transition: opacity .25s;
   width: 500px;
   height: 281px;
   background: #f2f2f2;
