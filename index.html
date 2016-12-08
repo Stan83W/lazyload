@@ -74,7 +74,24 @@
         <h1>Lazy load</h1>
       </header>
 
-      <p>Simple, no dependency, lazy loader. Swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. Adds a load listener and removes the <code>data-</code> attribute on load. If <code>data-srcset</code> to <code>srcset</code> and <a href="http://scottjehl.github.io/picturefill/" target="_blank">picturefill</a> is present, attempts to run picturefill on the element.</p>
+      <p>Simple, no dependency, lazy loader.</p>
+      <p>Swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. Adds a load listener and removes the <code>data-</code> attribute on load. If <code>data-srcset</code> to <code>srcset</code> and <a href="http://scottjehl.github.io/picturefill/" target="_blank">picturefill</a> is present, attempts to run picturefill on the element.</p>
+      <p>Doesn't preload or unload.</p>
+      <p>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
+
+      <h2>Dynamic content</h2>
+
+      <p>By default it checks the DOM for appropriate elements and begins checking those. If you load more content dynamically, you can call:</p>
+
+      <pre>lazyload();</pre>
+
+      <p>Or with a specific DOM node to look into:</p>
+
+      <pre>lazyload(node);</pre>
+
+      <p>It assumes the <code>document</code> if no node is specified. It won't check the same element more than once per iteration.</p>
+
+      <h2>Useful CSS</h2>
 
       <p>This demo page uses the following CSS:</p>
 
