@@ -12,7 +12,7 @@ Tabs are 2 spaces, functions are commented, variables are camel case and its pre
 
 ## Filesize
 
-* ~1kb uncompressed
+* ~4kb uncompressed
 * ~1kb minified
 * ~1kb minified and gzipped
 
