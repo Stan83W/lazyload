@@ -74,10 +74,17 @@
         <h1>Lazy load</h1>
       </header>
 
-      <p>Simple, no dependency, lazy loader.</p>
-      <p>Swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. Adds a load listener and removes the <code>data-</code> attribute on load. If <code>data-srcset</code> to <code>srcset</code> and <a href="http://scottjehl.github.io/picturefill/" target="_blank">picturefill</a> is present, attempts to run picturefill on the element.</p>
-      <p>Doesn't preload or unload.</p>
+      <p>Simple, tiny, no dependency, lazy loader.</p>
+
+      <p>Doesn't preload, unload, mess with media queries, emit events, offer APIs etc.</p>
+
       <p>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
+
+      <p>When an element is in the view port it swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. It also adds a load listener and removes the <code>data-</code> attribute on load to allow you to hook styles up to the two different states.</p>
+
+      <p>If <code>data-srcset</code> to <code>srcset</code> and <a href="http://scottjehl.github.io/picturefill/" target="_blank">picturefill</a> is present, attempts to run picturefill on the element.</p>
+
+      <p>When it runs out of elements to watch, the loop ends.</p>
 
       <h2>Dynamic content</h2>
 
@@ -90,6 +97,8 @@
       <pre>lazyload(node);</pre>
 
       <p>It assumes the <code>document</code> if no node is specified. It won't check the same element more than once per iteration.</p>
+
+      <p>This restarts the loop checking on things.</p>
 
       <h2>Useful CSS</h2>
 
@@ -131,7 +140,7 @@ img[data-srcset][src=""] {
 &lt;img width="500" height="281" data-src="/images/greenflash_800.jpg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="&gt;
       </pre>
 
-      Or using the padding trick:
+      <p>Or using the padding trick:</p>
 
       <pre>
 .img-container {
