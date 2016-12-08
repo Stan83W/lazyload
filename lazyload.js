@@ -115,8 +115,8 @@
    * @public
    * @param {Node} element in which to look
    */
-  function lazyload(container) {
-    var context = container || document;
+  function lazyload(context) {
+    context = context || document;
     var newEls = context.querySelectorAll('img[data-src], img[data-srcset], source[data-srcset], iframe[data-src]');
     newEls = Array.prototype.slice.call(newEls);
     els = arrayUnique(els.concat(newEls));
