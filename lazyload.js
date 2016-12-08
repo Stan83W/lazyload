@@ -5,11 +5,17 @@
  * Author: Mike Byrne @13twelve https://github.com/13twelve
  */
 (function (window, document) {
+
+  // Kill exeuction for bad browsers
+  if(typeof document.querySelectorAll === undefined || !('addEventListener' in window) || !window.requestAnimationFrame) {
+    return;
+  }
+
   // set up
-  var els = document.querySelectorAll('img[data-src], img[data-srcset], source[data-srcset], iframe[data-src]');
-  var elsLength = els.length;
-  var elLoaders = [];
-  var elsLoaded = 0;
+  var maxFrameCount = 10; // 60fps / 10 = 6 times a second
+  var frameCount = maxFrameCount;
+  var els = [];
+  var elsLength;
 
   /**
    * Checks if an element is in the viewport
@@ -27,9 +33,9 @@
    * @private
    */
   function loaded() {
-    els[this.index].removeEventListener('load',setSrc,false);
-    els[this.index].removeAttribute('data-src');
-    els[this.index].removeAttribute('data-srcset');
+    this.removeEventListener('load', loaded, false);
+    this.removeAttribute('data-src');
+    this.removeAttribute('data-srcset');
   }
 
   /**
@@ -37,37 +43,80 @@
    * @private
    */
   function setSrcs() {
-    for (var i = 0; i < elsLength; i++) {
+    if (frameCount === maxFrameCount) {
+      var elsLength = els.length;
+      var i;
+      for (i = 0; i < elsLength; i++) {
+        if (els[i] && els[i].index === undefined && elInViewport(els[i])) {
+          var thisEl = els[i];
+          els[i] = undefined;
 
-      if (els[i].index === undefined && elInViewport(els[i])) {
+          thisEl.index = i;
+          thisEl.addEventListener('load', loaded, false);
 
-        els[i].index = i;
-        els[i].addEventListener('load',setSrc,false);
+          var srcset = thisEl.getAttribute('data-srcset');
 
-        var srcset = els[i].getAttribute('data-srcset');
-
-        if (srcset) {
-          els[i].srcset = loaded;
-
-          if (picturefill) {
-            picturefill({
-              elements: [ els[i] ]
-            });
+          if (srcset) {
+            thisEl.srcset = srcset;
+            if (picturefill) {
+              picturefill({
+                elements: [ thisEl ]
+              });
+            }
+          } else {
+            thisEl.src = thisEl.getAttribute('data-src');
           }
-
-        } else {
-          els[i].src = els[i].getAttribute('data-src');
         }
-
-        elsLoaded++;
       }
+
+      for (i = 0; i < elsLength; i++) {
+        if (els[i] === undefined) {
+          els.splice(i, 1);
+        }
+      }
+
+      console.log(els);
+
+      frameCount = -1;
     }
-    if (elsLoaded < elsLength) {
-      window.requestAnimationFrame(setSrcs);
-    }
+
+    frameCount++;
+    window.requestAnimationFrame(setSrcs);
   }
 
-  // go go go
-  window.requestAnimationFrame(setSrcs);
+  /**
+   * Remove dupes from array
+   * @private
+   * @param {Array} array to clean up
+   * http://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items/28631880#answer-1584377
+   */
+  function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+        if(a[i] === a[j]) {
+          a.splice(j--, 1);
+        }
+      }
+    }
+    return a;
+  }
+
+  /**
+   * Inspect element
+   * @public
+   * @param {Node} element in which to look
+   */
+  function lazyload(container) {
+    var context = container || document;
+    var newEls = context.querySelectorAll('img[data-src], img[data-srcset], source[data-srcset], iframe[data-src]');
+    newEls = Array.prototype.slice.call(newEls);
+    els = arrayUnique(els.concat(newEls));
+    setSrcs();
+  }
+
+  window.lazyload = lazyload;
+
+  lazyload();
 
 })(window, document);
