@@ -75,8 +75,6 @@
         }
       }
 
-      console.log(els);
-
       frameCount = -1;
     }
 
