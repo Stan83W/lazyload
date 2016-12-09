@@ -5,7 +5,7 @@ v1.0.0 / 2016-12-07
 Simple, tiny, no dependency, lazy loader. **[Demo](http://lazyload.dev.area17.com/)**
 
 Doesn't preload, unload, mess with media queries, emit events, offer APIs etc.
-Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled `requestAnimationFrame` loop.
+Does periodically check all appropriate elements elements to see if they're in the viewport or not, using a throttled `requestAnimationFrame` loop.
 
 When an element is in the view port it swaps `data-src/data-srcset` on `img`, `source` and `iframes` to `src/srcset`. It also adds a load listener and removes the `data-` attribute on load to allow you to hook styles up to the two different states.
 
@@ -66,12 +66,20 @@ Tabs are 2 spaces, functions are commented, variables are camel case and its pre
 
 *IE11, recent Chrome, recent FireFox, recent Safari, recent Android - needs testing*
 
-For unsupported browsers, really old ones, you might want to look at [HTML4CSS](https://github.com/area17/html4css) and [legacypicturefill](https://github.com/area17/legacypicturefill) instead.
+If the browser passes the following JavaScript test then it gets lazyloaded as expected:
+
+```JavaScript
+(typeof document.querySelectorAll && ('addEventListener' in window) && window.requestAnimationFrame && typeof document.body.getBoundingClientRect)
+```
+
+Browsers which fail this test will immediately have their `data-src` and `data-srcset` attributes updated to `src` and `srcset` rather than waiting for the element to be within the viewport. So it fails safe, so to speak.
+
+For these browsers, really old ones, you might want to look at [HTML4CSS](https://github.com/area17/html4css) and [legacypicturefill](https://github.com/area17/legacypicturefill) instead.
 
 
 ## Filesize
 
-* ~4kb uncompressed
+* ~5kb uncompressed
 * ~1kb minified
 * ~1kb minified and gzipped
 
