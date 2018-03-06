@@ -87,9 +87,7 @@ Tabs are 2 spaces, functions are commented, variables are camel case and its pre
 
 ## Support
 
-Tested in
-
-As of writing IntersectionObserver is supported in Edge, FireFox and Chrome: (caniuse.com/#search=IntersectionObserver)[https://caniuse.com/#search=IntersectionObserver]
+As of writing `IntersectionObserver` is supported in Edge, FireFox and Chrome: (caniuse.com/#search=IntersectionObserver)[https://caniuse.com/#search=IntersectionObserver]
 
 If thats not supported, Safari 11 for example, lazyLoad checks for `document.querySelectorAll`, `('addEventListener' in window)`, `window.requestAnimationFrame` and `document.body.getBoundingClientRect`.
 
