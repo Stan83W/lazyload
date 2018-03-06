@@ -1,6 +1,6 @@
 # lazyload
 
-v1.0.0 / 2016-12-07
+v2.0.0 / 2018-03-06
 
 Simple, tiny, no dependency, lazy loader. **[Demo](http://lazyload.dev.area17.com/)**
 
@@ -13,23 +13,46 @@ If `data-srcset` to `srcset` and [picturefill](https://github.com/scottjehl/pict
 
 When it runs out of elements to watch, the loop ends.
 
-## Dynamic Content
+Uses `IntersectionObserver` if available and if not, it uses `requestAnimationFrame` if available. If neither are available it does nothing.
 
-lazyload exposes `lazyload` globally. By default it checks the DOM for appropriate elements and begins checking those. If you load more content dynamically, you can call:
+## Setting up
 
-```JavaScript
-lazyload();
+In your HTML:
+
+```HTML
+<script src="/lazyload.js"></script>
 ```
 
-Or with a specific DOM node to look into:
+In your JavaScript (on DOM ready):
 
 ```JavaScript
-lazyload(node);
+lazyLoad();
 ```
 
-It assumes the `document` if no `node` is specified. It won't check the same element more than once per iteration so no need to worry about duplicates.
+## Options
 
-This restarts the loop checking on things.
+These options are the defaults, and can be overridden on init:
+
+```JavaScript
+var options = {
+  pageUpdatedEventName: 'page:updated', // how your app tells the rest of the app an update happened
+  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src]', // maybe you just want images?
+  rootMargin: '0px', // IntersectionObserver option
+  threshold: 0, // IntersectionObserver option
+  maxFrameCount: 10, // 60fps / 10 = 6 times a second
+};
+lazyLoad(options);
+```
+
+`pageUpdatedEventName` - string - an event name to listen for when the page has new content that might need to be lazy loaded. If set to `false` lazyLoad will only run on initial page load.
+
+`elements` - string - string of items to look to lazy load.
+
+`rootMargin` - string - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver) [rootMargin](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin) option.
+
+`threshold` - integer/array - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver) [threshold](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds) option.
+
+`maxFrameCount` - integer - as `requestAnimationFrame` runs as the monitor refreshes, this could be 60 times a second, to throttle this we can tell the script every NUM of frames.
 
 ## Combating repaints
 
@@ -64,23 +87,19 @@ Tabs are 2 spaces, functions are commented, variables are camel case and its pre
 
 ## Support
 
-*IE11, recent Chrome, recent FireFox, recent Safari, recent Android - needs testing*
+Tested in
 
-If the browser passes the following JavaScript test then it gets lazyloaded as expected:
+As of writing IntersectionObserver is supported in Edge, FireFox and Chrome: (caniuse.com/#search=IntersectionObserver)[https://caniuse.com/#search=IntersectionObserver]
 
-```JavaScript
-(typeof document.querySelectorAll && ('addEventListener' in window) && window.requestAnimationFrame && typeof document.body.getBoundingClientRect)
-```
+If thats not supported, Safari 11 for example, lazyLoad checks for `document.querySelectorAll`, `('addEventListener' in window)`, `window.requestAnimationFrame` and `document.body.getBoundingClientRect`.
 
-Browsers which fail this test will immediately have their `data-src` and `data-srcset` attributes updated to `src` and `srcset` rather than waiting for the element to be within the viewport. So it fails safe, so to speak.
-
-For these browsers, really old ones, you might want to look at [HTML4CSS](https://github.com/area17/html4css) and [legacypicturefill](https://github.com/area17/legacypicturefill) instead.
+If they're not supported then this script isn't going to do anything. For these browsers, really old ones, you might want to look at [HTML4CSS](https://github.com/area17/html4css) and [legacypicturefill](https://github.com/area17/legacypicturefill) instead.
 
 
 ## Filesize
 
-* ~5kb uncompressed
-* ~1kb minified
+* ~7kb uncompressed
+* ~2kb minified
 * ~1kb minified and gzipped
 
 ## Author

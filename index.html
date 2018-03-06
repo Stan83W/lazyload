@@ -74,6 +74,8 @@
         <h1>Lazy load</h1>
       </header>
 
+      <p>v2.0.0 / 2018-03-06</p>
+
       <p>Simple, tiny, no dependency, lazy loader. Source code available on <strong><a href="https://github.com/area17/lazyload">GitHub</a></strong>.</p>
 
       <p>Doesn't preload, unload, mess with media queries, emit events, offer APIs etc. <br>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
@@ -84,19 +86,43 @@
 
       <p>When it runs out of elements to watch, the loop ends.</p>
 
-      <h2>Dynamic content</h2>
+      <p><strong>v2</strong> uses <code>IntersectionObserver</code>  if available and if not, it uses <code>requestAnimationFrame</code> if available. If neither are available it does nothing.</p>
 
-      <p>lazyload exposes <code>lazyload</code> globally. By default it checks the DOM for appropriate elements and begins checking those. If you load more content dynamically, you can call:</p>
+      <h2>Setting up</h2>
 
-      <pre>lazyload();</pre>
+      <p>In your HTML:</p>
 
-      <p>Or with a specific DOM node to look into:</p>
+      <pre>&lt;script src="/lazyload.js"&gt;&lt;/script&gt;</pre>
 
-      <pre>lazyload(node);</pre>
+      <p>In your JavaScript (on DOM ready):</p>
 
-      <p>It assumes the <code>document</code> if no <code>node</code> is specified. It won't check the same element more than once per iteration so no need to worry about duplicates.</p>
+      <pre>lazyLoad();</pre>
 
-      <p>This restarts the loop checking on things.</p>
+      <h2>Options</h2>
+
+      <p>These options are the defaults, and can be overridden on init:</p>
+
+      <pre>var options = {
+  pageUpdatedEventName: 'page:updated', // how your app tells the rest of the app an update happened
+  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src]', // maybe you just want images?
+  rootMargin: '0px', // IntersectionObserver option
+  threshold: 0, // IntersectionObserver option
+  maxFrameCount: 10, // 60fps / 10 = 6 times a second
+};
+lazyLoad(options);</pre>
+
+      <dl>
+        <dt><code>pageUpdatedEventName</code></dt>
+          <dd><em>string</em> - an event name to listen for when the page has new content that might need to be lazy loaded. If set to `false` lazyLoad will only run on initial page load.</dd>
+        <dt><code>elements</code></dt>
+          <dd><em>string</em> - string of items to look to lazy load.</dd>
+        <dt><code>rootMargin</code></dt>
+          <dd><em>string</em> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver" target="_blank">IntersectionObserver</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin" target="_blank">rootMargin</a> option.</dd>
+        <dt><code>threshold</code></dt>
+          <dd><em>integer/array</em> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver" target="_blank">IntersectionObserver</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds" target="_blank">threshold</a> option.</dd>
+        <dt><code>maxFrameCount</code></dt>
+          <dd><em>integer</em> - as <code>requestAnimationFrame</code> runs as the monitor refreshes, this could be 60 times a second, to throttle this we can tell the script every NUM of frames.</dd>
+      </dl>
 
       <h2>Useful CSS</h2>
 
@@ -269,9 +295,10 @@ img[data-srcset][src=""] {
       <small>&copy; AREA 17</small>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.2/picturefill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js"></script>
     <script src="/lazyload.js"></script>
     <script>
+      lazyLoad();
       document.getElementById('add').addEventListener('click', function(event){
         event.preventDefault();
         this.parentNode.parentNode.removeChild(this.parentNode);
@@ -279,7 +306,9 @@ img[data-srcset][src=""] {
         var html = li + li + li + li + li + li + li + li + li + li + li + li;
         var list = document.getElementById('list');
         list.innerHTML = html;
-        lazyload(list);
+        var updatedEvent = document.createEvent('Event');
+        updatedEvent.initEvent('page:updated', true, true);
+        document.dispatchEvent(updatedEvent);
       }, false);
     </script>
   </body>
