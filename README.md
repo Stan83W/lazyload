@@ -9,7 +9,7 @@ Does periodically check all appropriate elements elements to see if they're in t
 
 When an element is in the view port it swaps `data-src/data-srcset` on `img`, `source` and `iframes` to `src/srcset`. It also adds a load listener and removes the `data-` attribute on load to allow you to hook styles up to the two different states.
 
-It will also look for `[data-lazyload]` and swap that attribute for `[data-lazyloaded]`; again so you can hook up styles to the two different states.
+It will also look for `data-lazyload` and swap that attribute for `data-lazyloaded`; again so you can hook up styles to the two different states.
 
 If `data-srcset` to `srcset` and [picturefill](https://github.com/scottjehl/picturefill) is present, attempts to run picturefill on the element.
 
