@@ -1,6 +1,6 @@
 # lazyload
 
-v2.0.1 / 2018-03-27
+v2.1.0 / 2018-03-27
 
 Simple, tiny, no dependency, lazy loader. **[Demo](http://lazyload.dev.area17.com/)**
 
@@ -8,6 +8,8 @@ Doesn't preload, unload, mess with media queries, emit events, offer APIs etc.
 Does periodically check all appropriate elements elements to see if they're in the viewport or not, using a throttled `requestAnimationFrame` loop.
 
 When an element is in the view port it swaps `data-src/data-srcset` on `img`, `source` and `iframes` to `src/srcset`. It also adds a load listener and removes the `data-` attribute on load to allow you to hook styles up to the two different states.
+
+It will also look for `[data-lazyload]` and swap that attribute for `[data-lazyloaded]`; again so you can hook up styles to the two different states.
 
 If `data-srcset` to `srcset` and [picturefill](https://github.com/scottjehl/picturefill) is present, attempts to run picturefill on the element.
 
@@ -36,7 +38,7 @@ These options are the defaults, and can be overridden on init:
 ```JavaScript
 var options = {
   pageUpdatedEventName: 'page:updated', // how your app tells the rest of the app an update happened
-  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src]', // maybe you just want images?
+  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src], [data-lazyload]', // maybe you just want images?
   rootMargin: '0px', // IntersectionObserver option
   threshold: 0, // IntersectionObserver option
   maxFrameCount: 10, // 60fps / 10 = 6 times a second

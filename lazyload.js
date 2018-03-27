@@ -1,4 +1,4 @@
-/*! lazyload - v2.0.1 - 2018-03-06
+/*! lazyload - v2.1.0 - 2018-03-27
  * https://github.com/13twelve/lazyload
  * Copyright (c) 2018
  * License: MIT
@@ -22,7 +22,7 @@
 
   var options = {
     pageUpdatedEventName: 'page:updated', // how your app tells the rest of the app an update happened
-    elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src]', // maybe you just want images?
+    elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src], [data-lazyload]', // maybe you just want images?
     rootMargin: '0px', // IntersectionObserver option
     threshold: 0, // IntersectionObserver option
     maxFrameCount: 10, // 60fps / 10 = 6 times a second
@@ -71,6 +71,7 @@
   function _removeDataAttrs(el) {
     el.removeAttribute('data-src');
     el.removeAttribute('data-srcset');
+    el.removeAttribute('data-lazyload');
   }
 
   /**
@@ -91,6 +92,7 @@
   function _updateEl(el) {
     var srcset = el.getAttribute('data-srcset');
     var src = el.getAttribute('data-src');
+    var dlazyload = el.getAttribute('data-lazyload') !== null;
     //
     if (srcset) {
       // if source set, update and try picturefill
@@ -104,6 +106,11 @@
     if (src) {
       // if source set, update
       el.src = src;
+    }
+    if (dlazyload) {
+      el.setAttribute('data-lazyloaded','');
+      el.removeEventListener('load', _loaded);
+      _removeDataAttrs(el);
     }
   }
 
@@ -240,3 +247,4 @@
 
   return lazyLoad;
 }));
+

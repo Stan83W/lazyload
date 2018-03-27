@@ -74,13 +74,15 @@
         <h1>Lazy load</h1>
       </header>
 
-      <p>v2.0.1 / 2018-03-27</p>
+      <p>v2.1.0 / 2018-03-27</p>
 
       <p>Simple, tiny, no dependency, lazy loader. Source code available on <strong><a href="https://github.com/area17/lazyload">GitHub</a></strong>.</p>
 
       <p>Doesn't preload, unload, mess with media queries, emit events, offer APIs etc. <br>Does periodically check all appropriate elements elements to see if they're in the viewport or not using a throttled <code>requestAnimationFrame</code> loop.</p>
 
       <p>When an element is in the view port it swaps <code>data-src/data-srcset</code> on <code>img</code>, <code>source</code> and <code>iframes</code> to <code>src/srcset</code>. It also adds a load listener and removes the <code>data-</code> attribute on load to allow you to hook styles up to the two different states.</p>
+
+      <p>It will also look for <code>[data-lazyload]</code> and swap that attribute for <code>[data-lazyloaded]</code>; again so you can hook up styles to the two different states.</p>
 
       <p>If <code>data-srcset</code> to <code>srcset</code> and <a href="http://scottjehl.github.io/picturefill/" target="_blank">picturefill</a> is present, attempts to run picturefill on the element.</p>
 
@@ -104,7 +106,7 @@
 
       <pre>var options = {
   pageUpdatedEventName: 'page:updated', // how your app tells the rest of the app an update happened
-  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src]', // maybe you just want images?
+  elements: 'img[data-src], img[data-srcset], source[data-srcset], iframe[data-src], video[data-src], [data-lazyload]', // maybe you just want images?
   rootMargin: '0px', // IntersectionObserver option
   threshold: 0, // IntersectionObserver option
   maxFrameCount: 10, // 60fps / 10 = 6 times a second
