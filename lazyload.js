@@ -1,4 +1,4 @@
-/*! lazyload - v2.0.0 - 2018-03-06
+/*! lazyload - v2.0.1 - 2018-03-06
  * https://github.com/13twelve/lazyload
  * Copyright (c) 2018
  * License: MIT
@@ -219,7 +219,7 @@
    */
   var lazyLoad = function(opts) {
     for(var item in opts) {
-      if(!opts.hasOwnProperty(item)) {
+      if(opts.hasOwnProperty(item)) {
         options[item] = opts[item];
       }
     }
