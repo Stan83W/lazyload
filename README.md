@@ -1,6 +1,6 @@
 # lazyload
 
-v2.1.0 / 2018-03-27
+v2.1.1 / 2018-04-01
 
 Simple, tiny, no dependency, lazy loader. **[Demo](http://lazyload.dev.area17.com/)**
 
